@@ -13,8 +13,9 @@ public:
 	Ball(int radius, int points, sf::Vector2f pos, int speed, sf::Color color);
 	~Ball();
 	
-	void update();
-	void draw(sf::RenderWindow & window);
+	bool interact(sf::Shape & body) override;
+	void update() override;
+	void draw(sf::RenderWindow & window) const override;
 };
 
 #endif // BALL_H

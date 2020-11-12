@@ -20,13 +20,7 @@ Rectangle::~Rectangle()
 {}
 
 void
-Rectangle::update()
-{
-	/* Nothing to do here yet . . . */
-}
-
-void
-Rectangle::draw(sf::RenderWindow & window)
+Rectangle::draw(sf::RenderWindow & window) const
 {
 	window.draw(body);
 }

@@ -11,8 +11,7 @@ public:
 	Rectangle(sf::Vector2f size, sf::Vector2f pos, sf::Color color, bool justOutline = false);
 	~Rectangle();
 	
-	void update();
-	void draw(sf::RenderWindow & window);
+	void draw(sf::RenderWindow & window) const override;
 };
 
 #endif // RECTANGLE_H
