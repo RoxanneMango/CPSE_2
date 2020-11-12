@@ -1,5 +1,8 @@
 #include <SFML/Graphics.hpp>
 
+#include "ball.h"
+#include "rectangle.h"
+
 int
 main(int argc, char ** argv)
 {
@@ -8,48 +11,22 @@ main(int argc, char ** argv)
 	window.setMouseCursorVisible(false);
 	sf::View view(sf::Vector2f(0.0f,0.0f), sf::Vector2f(720, 480));
 
-	int speed = 3;
-	sf::Vector2f ballVelocity(speed,speed);
-	sf::CircleShape ball(20, 60);
-	ball.setOrigin(ball.getRadius(), ball.getRadius());
-	ball.setPosition(sf::Vector2f(60,60));
-	ball.setFillColor(sf::Color::White);
-
-	std::vector<sf::RectangleShape *> C_O;
+	Ball ball(20, 60, sf::Vector2f(60,60), 3, sf::Color::White);
 	//
+	float size = 20;
 	float wallX = window.getSize().x;
 	float wallY = window.getSize().y;
-	float size = 20;
+	Rectangle wall0(sf::Vector2f(wallX, size), sf::Vector2f(wallX/2, size/2), sf::Color::Green);
+	Rectangle wall1(sf::Vector2f(wallX, size), sf::Vector2f(wallX/2, wallY-size/2), sf::Color::Red);
+	Rectangle wall2(sf::Vector2f(size, wallY), sf::Vector2f(size/2, wallY/2), sf::Color::Yellow);
+	Rectangle wall3(sf::Vector2f(size, wallY), sf::Vector2f(wallX-size/2, wallY/2), sf::Color::Blue);
+	Rectangle cursor(sf::Vector2f(40,40), sf::Vector2f(0,0), sf::Color::Magenta, true);
 	//
-	sf::RectangleShape wall0(sf::Vector2f(wallX, size)); 
-	wall0.setOrigin(wallX/2, size/2);
-	wall0.setPosition( wallX/2, size/2 );
-	wall0.setFillColor(sf::Color::Green);
+	std::vector<Shape *> C_O;
 	C_O.push_back(&wall0);
-	//
-	sf::RectangleShape wall1(sf::Vector2f(wallX, size)); 
-	wall1.setOrigin(wallX/2, size/2);
-	wall1.setPosition( wallX/2, wallY-size/2 );
-	wall1.setFillColor(sf::Color::Red);
 	C_O.push_back(&wall1);
-
-	sf::RectangleShape wall2(sf::Vector2f(size, wallY));
-	wall2.setOrigin(size/2, wallY/2);
-	wall2.setPosition(size/2, wallY/2);
-	wall2.setFillColor(sf::Color::Yellow);
 	C_O.push_back(&wall2);
-	//
-	sf::RectangleShape wall3(sf::Vector2f(size, wallY));
-	wall3.setOrigin(size/2, wallY/2);
-	wall3.setPosition(wallX-size/2, wallY/2);
-	wall3.setFillColor(sf::Color::Blue);
 	C_O.push_back(&wall3);
-
-	sf::RectangleShape cursor(sf::Vector2f(40,40)); cursor.setFillColor(sf::Color::Black); cursor.setFillColor(sf::Color::Magenta);
-	cursor.setOrigin(cursor.getSize().x / 2, cursor.getSize().y / 2);
-	cursor.setOutlineThickness(1);
-	cursor.setOutlineColor(sf::Color::Magenta);
-	cursor.setFillColor(sf::Color::Transparent);
 	C_O.push_back(&cursor);
 	
 	sf::Event event;
@@ -60,39 +37,45 @@ main(int argc, char ** argv)
 			if(event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 				window.close();
 		}
-		cursor.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y));
+		cursor.body.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y));
 		for(unsigned int i = 0; i < C_O.size(); ++i)
 		{
-			float deltaX = ball.getPosition().x - C_O[i]->getPosition().x;
-			float deltaY = ball.getPosition().y - C_O[i]->getPosition().y;
+			float deltaX = ball.body.getPosition().x - C_O[i]->body.getPosition().x;
+			float deltaY = ball.body.getPosition().y - C_O[i]->body.getPosition().y;
 			//
-			float intersectX = abs(deltaX) - (ball.getOrigin().x + C_O[i]->getOrigin().x);
-			float intersectY = abs(deltaY) - (ball.getOrigin().y + C_O[i]->getOrigin().y);
+			float intersectX = abs(deltaX) - (ball.body.getOrigin().x + C_O[i]->body.getOrigin().x);
+			float intersectY = abs(deltaY) - (ball.body.getOrigin().y + C_O[i]->body.getOrigin().y);
 			//
 			if(intersectX < 0.0f && intersectY < 0.0f)
 			{	
-				if(intersectX > intersectY)			// X_AXIS
+				if(intersectX > intersectY)				// X_AXIS
 				{
 					if(deltaX > 0.0f)
-						ballVelocity.x = speed;		// LEFT_C
+						ball.velocity.x = ball.speed;		// LEFT_C
 					else
-						ballVelocity.x = -speed;	// RIGHT_C
+						ball.velocity.x = -ball.speed;		// RIGHT_C
 				}
-				else								// Y_AXIS
+				else									// Y_AXIS
 				{
 					if(deltaY > 0.0f)
-						ballVelocity.y = speed;		// DOWN_C
+						ball.velocity.y = ball.speed;		// DOWN_C
 					else
-						ballVelocity.y = -speed;	// TOP_C
+						ball.velocity.y = -ball.speed;		// TOP_C
 				}
 				break;
 			}
 		}
-		ball.move(ballVelocity);
+		ball.update();
+		
 		window.clear(sf::Color::Black);
+		
 		for(unsigned int i = 0; i < C_O.size(); ++i)
-		window.draw(*C_O[i]);
-		window.draw(ball);
+			C_O[i]->draw(window);
+		ball.draw(window);
+		
 		window.display();
 	}
+	return 0;
 }
+
+// https://github.com/RoxanneMango/CPSE_2
