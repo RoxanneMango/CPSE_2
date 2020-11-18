@@ -2,6 +2,7 @@
 
 #include "ball.h"
 #include "rectangle.h"
+#include "action.h"
 
 int
 main(int argc, char ** argv)
@@ -24,6 +25,14 @@ main(int argc, char ** argv)
 
 	std::vector<Shape *> gameObjects = {&wall0, &wall1, &wall2, &wall3, &cursor, &ball};
 	
+	action actions[] = {
+		action( sf::Keyboard::A, [&](){ ball.velocity.x = -ball.speed; }),
+		action( sf::Keyboard::D, [&](){ ball.velocity.x = ball.speed; }),
+		action( sf::Keyboard::W, [&](){ ball.velocity.y = -ball.speed; }),
+		action( sf::Keyboard::S, [&](){ ball.velocity.y = ball.speed; }),
+		action( sf::Mouse::Right, [&](){ ball.body.setPosition( (sf::Vector2f)sf::Mouse::getPosition( window )); })
+	};
+	
 	sf::Event event;
 	while (window.isOpen())
 	{
@@ -32,6 +41,9 @@ main(int argc, char ** argv)
 			if(event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 				window.close();
 		}
+		
+		for( auto & action : actions )
+			action();
 		
 		cursor.body.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y));
 		for(unsigned int i = 0; i < gameObjects.size(); ++i)
@@ -47,5 +59,3 @@ main(int argc, char ** argv)
 	}
 	return 0;
 }
-
-// https://github.com/RoxanneMango/CPSE_2
