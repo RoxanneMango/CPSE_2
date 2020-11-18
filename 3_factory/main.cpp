@@ -2,7 +2,6 @@
 
 #include "ball.h"
 #include "rectangle.h"
-#include "action.h"
 
 int
 main(int argc, char ** argv)
@@ -23,30 +22,14 @@ main(int argc, char ** argv)
 	Rectangle cursor(sf::Vector2f(40,40), sf::Vector2f(0,0), sf::Color::Magenta, true);
 	Ball ball(20, 60, sf::Vector2f(60,60), 3, sf::Color::White);
 
-	std::vector<Shape *> shapes = {&wall0, &wall1, &wall2, &wall3, &cursor, &ball};
+	std::vector<Shape *> gameObjects = {&wall0, &wall1, &wall2, &wall3, &cursor, &ball};
 	
-	Action actions[] = {
-		Action( [&]()
-			{
-				for(Shape * shape : shapes)
-				{
-					shape->update();
-				}
-			}),
-		Action( [&]() {
-			for(Shape * shape : shapes)
-			{
-				if(ball.interact(shape->body))
-				{
-					break;
-				}
-			}
-		}),
-		Action( sf::Keyboard::A, [&](){ ball.velocity.x = -ball.speed; }),
-		Action( sf::Keyboard::D, [&](){ ball.velocity.x = ball.speed; }),
-		Action( sf::Keyboard::W, [&](){ ball.velocity.y = -ball.speed; }),
-		Action( sf::Keyboard::S, [&](){ ball.velocity.y = ball.speed; }),
-		Action( sf::Mouse::Right, [&](){ ball.body.setPosition( (sf::Vector2f)sf::Mouse::getPosition( window )); })
+	action actions[] = {
+		action( sf::Keyboard::A, [&](){ ball.velocity.x = -ball.speed; }),
+		action( sf::Keyboard::D, [&](){ ball.velocity.x = ball.speed; }),
+		action( sf::Keyboard::W, [&](){ ball.velocity.y = -ball.speed; }),
+		action( sf::Keyboard::S, [&](){ ball.velocity.y = ball.speed; }),
+		action( sf::Mouse::Right, [&](){ ball.body.setPosition( (sf::Vector2f)sf::Mouse::getPosition( window )); })
 	};
 	
 	sf::Event event;
@@ -58,16 +41,19 @@ main(int argc, char ** argv)
 				window.close();
 		}
 		
-		for( Action & action : actions )
+		for( auto & action : actions )
 			action();
 		
 		cursor.body.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y));
+		for(unsigned int i = 0; i < gameObjects.size(); ++i)
+			if(ball.interact(gameObjects[i]->body)) break;
 
+		for(unsigned int i = 0; i < gameObjects.size(); ++i)
+			gameObjects[i]->update();
+		
 		window.clear(sf::Color::Black);
-		for(Shape * shape : shapes)
-		{
-			shape->draw(window);
-		}
+		for(unsigned int i = 0; i < gameObjects.size(); ++i)
+			gameObjects[i]->draw(window);
 		window.display();
 	}
 	return 0;

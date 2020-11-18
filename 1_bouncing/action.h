@@ -3,19 +3,22 @@
 
 #include <functional>
 
-class action {
+class Action {
 private:
 	std::function< bool() > condition;
 	std::function< void() > work;
 public:
-	action(
+	Action(
 	   std::function< bool() > condition, 
 	   std::function< void() > work
 	) : condition( condition ), 
 		work( work ) 
 	{}
+	
+	Action( std::function<void()> work ) : condition( [](){ return true; } ), work(work)
+	{}
 
-	action(
+	Action(
 		sf::Keyboard::Key key,
 		std::function< void() > work
 	) :
@@ -25,7 +28,7 @@ public:
 		work(work)
 	{}
 
-	action(
+	Action(
 		sf::Mouse::Button button,
 		std::function< void() > work
 	) :
