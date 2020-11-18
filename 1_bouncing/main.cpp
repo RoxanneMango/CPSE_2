@@ -25,21 +25,23 @@ main(int argc, char ** argv)
 
 	std::vector<Shape *> shapes = {&wall0, &wall1, &wall2, &wall3, &cursor, &ball};
 	
-	Action actions[] = {
+	Action actions[] =
+	{
 		Action( [&]()
-			{
-				for(Shape * shape : shapes)
-				{
-					shape->update();
-				}
-			}),
-		Action( [&]() {
+		{
 			for(Shape * shape : shapes)
 			{
 				if(ball.interact(shape->body))
 				{
 					break;
 				}
+			}
+		}),
+		Action( [&]()
+		{
+			for(Shape * shape : shapes)
+			{
+				shape->update();
 			}
 		}),
 		Action( sf::Keyboard::A, [&](){ ball.velocity.x = -ball.speed; }),
@@ -59,7 +61,9 @@ main(int argc, char ** argv)
 		}
 		
 		for( Action & action : actions )
+		{
 			action();
+		}
 		
 		cursor.body.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y));
 
