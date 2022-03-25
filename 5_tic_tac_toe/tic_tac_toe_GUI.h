@@ -118,7 +118,7 @@ public:
 		window.draw(topText_sf);
 		window.draw(board_sf);
 		window.draw(bottomText_sf);
-		// only draw error text is an error occured
+		// only draw error text if an error occured
 		if(error) window.draw(errorText_sf);
 		window.display();
 	}

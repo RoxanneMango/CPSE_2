@@ -16,6 +16,8 @@ public:
 		this->selectColor = selectColor;
 		this->speed = 0;
 		
+		this->name = "cursor";
+		
 		body.setOrigin(size.x/2, size.y/2);
 		
 		body.setOutlineThickness(1);
@@ -46,15 +48,6 @@ public:
 	void draw(sf::RenderWindow & window) const override
 	{
 		window.draw(body);
-	}
-	
-	std::string getReceipt() override
-	{
-		std::string s;
-		
-		s += std::to_string(id);
-		
-		return s;
 	}
 };
 

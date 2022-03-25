@@ -5,21 +5,25 @@
 
 class Picture : public Shape
 {
-	std::string PATH;
 	sf::Texture texture;
 public:
 	sf::RectangleShape body;
 	
 	Picture(sf::Vector2f position, sf::Vector2f size, std::string PATH, sf::Color outlineColor, sf::Color selectColor, int speed) :
-		PATH(PATH), body(size), Shape(body)
+		body(size), Shape(body)
 	{
 		if(!(texture.loadFromFile(&PATH[0])))
 		{
-			printf("Error: could not open texture '%s'\n", PATH);
+			// exit
+			exit(-1);
 		}
 		body.setTexture(&texture);
 		
+		this->name = "picture";
+		
 		this->id = 4;
+		this->PATH = PATH;
+		this->size = size;
 		this->fillColor = sf::Color::Transparent;
 		this->outlineColor = outlineColor;
 		this->selectColor = selectColor;
@@ -38,30 +42,6 @@ public:
 	void draw(sf::RenderWindow & window) const override
 	{
 		window.draw(body);
-	}
-	
-	std::string getReceipt() override
-	{
-		std::string s;
-		
-		s += std::to_string(id) + " ";
-		s += std::to_string((int)body.getPosition().x) + " ";
-		s += std::to_string((int)body.getPosition().y) + " ";
-		s += std::to_string((int)body.getSize().x) + " ";
-		s += std::to_string((int)body.getSize().y) + " ";
-		s += PATH + " ";
-		s += std::to_string(outlineColor.r) + " ";
-		s += std::to_string(outlineColor.g) + " ";
-		s += std::to_string(outlineColor.b) + " ";
-		s += std::to_string(outlineColor.a) + " ";
-		s += std::to_string(selectColor.r) + " ";
-		s += std::to_string(selectColor.g) + " ";
-		s += std::to_string(selectColor.b) + " ";
-		s += std::to_string(selectColor.a) + " ";
-		s += std::to_string(speed) + " ";
-		s += ";\n";
-		
-		return s;
 	}
 };
 

@@ -30,8 +30,6 @@ protected:
 	static constexpr unsigned int WIDTH = 12;
 	static constexpr unsigned int HEIGHT = 5;
 
-	unsigned int x = 0;
-	unsigned int y = 0;
 	unsigned int numOfUndos = 0;
 	unsigned int maxNumOfUndos = 1;
 	
@@ -76,8 +74,8 @@ protected:
 			// populate dummy board with the turns from commandList
 			for(unsigned int i = 0; i < commandList.size(); ++i)
 			{
-				int x = ( (commandList[i].pos % WIDTH - 1) / 3 );
-				int y = (commandList[i].pos / WIDTH) ? (commandList[i].pos / WIDTH) / 2 : 0;
+				unsigned int x = ( (commandList[i].pos % WIDTH - 1) / 3 );
+				unsigned int y = (commandList[i].pos / WIDTH) ? (commandList[i].pos / WIDTH) / 2 : 0;
 				board[(y * 3) + x] = commandList[i].isPlayer1;
 			}
 
@@ -125,7 +123,7 @@ public:
 	virtual ~TicTacToe()
 	{}
 	
-	virtual void handleInput()
+	void handleInput()
 	{
 		// skip this function if the game is already over; avoid stalling due to getchar() waiting for input
 		if(isEnd || (commandList.size() >= 9)) return;
@@ -170,8 +168,8 @@ public:
 				if((input < 1) || (input > 9)) throw "invalid input";
 				
 				// calculate the position within the board
-				x = ((input-1)%3);
-				y = input <= 3 ? 0 : input <= 6 ? 2 : 4;
+				unsigned int x = ((input-1)%3);
+				unsigned int y = input <= 3 ? 0 : input <= 6 ? 2 : 4;
 				unsigned int pos = (y * WIDTH) + (x + (x * 3) + 1);
 				
 				// only touch it if it's not empty

@@ -9,7 +9,7 @@ all:
 	@echo "Making object files. . ."
 	@g++ -c *.cpp $(INCLUDE) -std=c++11
 	@echo "Doing stuff with object files. . ."
-	@g++ *.o -o $(EXEC) $(LIB) $(LIBS) -static
+	@g++ *.o -o $(EXEC) $(LIB) $(LIBS)
 	@./$(EXEC)
 
 clean: 
@@ -22,7 +22,7 @@ play:
 	
 linux:
 	@echo "Making object files. . ."
-	@g++ -c *.cpp $(INCLUDE) -std=c++11
+	@g++ -c *.cpp $(INCLUDE) -std=c++11 
 	@echo "Doing stuff with object files. . ."
 	@g++ *.o -o $(EXEC) $(LIB) $(LIBS)
 	@echo "Removing object files again. . ."

@@ -5,18 +5,23 @@
 
 class Shape
 {
-protected:
-	bool isSelected = false;
-	sf::Vector2f velocity;
-	int speed;
+public:
+	sf::Shape & body;
+
+	int id = -1;
+	std::string name;
+
+	sf::Vector2f size;
+	int radius = 0;
 	
+	std::string PATH;
 	sf::Color fillColor;
 	sf::Color outlineColor;
 	sf::Color selectColor;
-	
-public:
-	int id = -1;
-	sf::Shape & body;
+	int speed;
+
+	bool isSelected = false;
+	sf::Vector2f velocity;
 
 	Shape(sf::Shape & body) : body(body)
 	{
@@ -47,40 +52,21 @@ public:
 		this->body.setRotation(rotation);
 	}
 	virtual void update()
-	{
-		velocity.x = 0;
-		velocity.y = 0;
-		
+	{	
 		if(isSelected)
 		{
 			body.setOutlineColor(selectColor);
-			
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-			{ 
-				velocity.x = -speed; 
-			}
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			{ 
-				velocity.x = speed; 
-			}
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-			{ 
-				velocity.y = -speed;
-			}
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-			{ 
-				velocity.y = speed; 
-			}
 			body.move(velocity);
 		}
 		else
 		{
 			body.setOutlineColor(outlineColor);
 		}
+		velocity.x = 0;
+		velocity.y = 0;
 	}
 	
 	virtual void draw(sf::RenderWindow & window) const = 0;
-	virtual std::string getReceipt() = 0;
 };
 
 #endif // SHAPE_H

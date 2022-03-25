@@ -12,10 +12,13 @@ public:
 		body(radius, 3*radius), Shape(body)
 	{
 		this->id = 0;
+		this->radius = radius;
 		this->fillColor = fillColor;
 		this->outlineColor = outlineColor;
 		this->selectColor = selectColor;
 		this->speed = speed;
+		
+		this->name = "circle";
 		
 		body.setOrigin(radius, radius);
 		body.setPosition(position);
@@ -30,32 +33,6 @@ public:
 	void draw(sf::RenderWindow & window) const override
 	{
 		window.draw(body);
-	}
-	
-	std::string getReceipt() override
-	{
-		std::string s;
-		
-		s += std::to_string(id) + " ";
-		s += std::to_string((int)body.getPosition().x) + " ";
-		s += std::to_string((int)body.getPosition().y) + " ";
-		s += std::to_string((int)body.getRadius()) + " ";
-		s += std::to_string(fillColor.r) + " ";
-		s += std::to_string(fillColor.g) + " ";
-		s += std::to_string(fillColor.b) + " ";
-		s += std::to_string(fillColor.a) + " ";
-		s += std::to_string(outlineColor.r) + " ";
-		s += std::to_string(outlineColor.g) + " ";
-		s += std::to_string(outlineColor.b) + " ";
-		s += std::to_string(outlineColor.a) + " ";
-		s += std::to_string(selectColor.r) + " ";
-		s += std::to_string(selectColor.g) + " ";
-		s += std::to_string(selectColor.b) + " ";
-		s += std::to_string(selectColor.a) + " ";
-		s += std::to_string(speed) + " ";
-		s += ";\n";
-		
-		return s;
 	}
 };
 
